@@ -19,41 +19,37 @@ const STEPS = [
 export default function DashboardPage() {
   const { data: status, isLoading: statusLoading } = useQuery({ queryKey: ["status"], queryFn: fetchStatus });
   const { data: posts } = useQuery({ queryKey: ["posts"], queryFn: fetchPosts });
-  const [polling, setPolling] = useState(false);
   const [currentStep, setCurrentStep] = useState<string | null>(null);
-  const pollRef = useRef<ReturnType<typeof setInterval>>();
+  const [isRunning, setIsRunning] = useState(false);
+  const wasRunningRef = useRef(false);
 
   const postMutation = useMutation({
     mutationFn: triggerPostNow,
-    onSuccess: () => {
-      setPolling(true);
-      setCurrentStep("Selecionando vídeo...");
-      toast.info("Postagem iniciada...");
-    },
+    onSuccess: () => toast.info("Postagem iniciada..."),
     onError: () => toast.error("Falha ao iniciar postagem"),
   });
 
+  // Always poll /post/status every 4s — catches both manual and autonomous posts
   useEffect(() => {
-    if (!polling) return;
-    pollRef.current = setInterval(async () => {
+    const interval = setInterval(async () => {
       try {
         const s = await fetchPostStatus();
+        setIsRunning(s.running);
         if (s.current_step) setCurrentStep(s.current_step);
-        if (!s.running) {
-          clearInterval(pollRef.current);
-          setPolling(false);
+        if (!s.running && wasRunningRef.current) {
           setCurrentStep(null);
-          const result = s.last_result as unknown as { success: boolean; message?: string; filename?: string };
+          const result = s.last_result as unknown as { success: boolean; message?: string; filename?: string } | null;
           if (result?.success) {
             toast.success(`Publicado: ${result.filename}`);
-          } else {
+          } else if (result) {
             toast.error(result?.message || "Falha na postagem");
           }
         }
-      } catch { /* keep polling */ }
-    }, 3000);
-    return () => clearInterval(pollRef.current);
-  }, [polling]);
+        wasRunningRef.current = s.running;
+      } catch { /* ignore */ }
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Chart data: posts per day last 30 days
   const chartData = (() => {
@@ -106,15 +102,15 @@ export default function DashboardPage() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => postMutation.mutate()}
-            disabled={postMutation.isPending || polling}
+            disabled={postMutation.isPending || isRunning}
             className="px-6 py-3 rounded-lg font-heading font-semibold text-sm bg-primary text-primary-foreground pulse-neon disabled:opacity-50 transition-all flex items-center gap-2"
           >
-            {polling ? <Loader2 size={16} className="animate-spin" /> : <Zap size={16} />}
-            {polling ? "Postando..." : "Postar Agora"}
+            {isRunning ? <Loader2 size={16} className="animate-spin" /> : <Zap size={16} />}
+            {isRunning ? "Postando..." : "Postar Agora"}
           </button>
         </div>
 
-        {polling && (
+        {isRunning && (
           <div className="glass-card-blue p-4 space-y-2 max-w-sm">
             {STEPS.map((step) => {
               const currentIndex = currentStep ? STEPS.indexOf(currentStep) : -1;
