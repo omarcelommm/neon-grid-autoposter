@@ -73,8 +73,8 @@ export default function SettingsPage() {
     <div className="space-y-8 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-heading text-2xl font-bold text-primary flex items-center gap-3">
-            <Settings size={28} />
+          <h2 className="font-heading text-2xl font-bold text-foreground flex items-center gap-3">
+            <Settings size={28} className="text-primary" />
             Configurações
           </h2>
           <p className="text-muted-foreground mt-1">Gerencie o agendamento e intervalos de postagem</p>
