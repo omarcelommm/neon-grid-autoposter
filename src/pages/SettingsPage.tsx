@@ -73,8 +73,8 @@ export default function SettingsPage() {
     <div className="space-y-8 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-heading text-2xl font-bold text-foreground flex items-center gap-3">
-            <Settings size={28} className="text-primary" />
+          <h2 className="font-heading text-2xl font-bold text-primary flex items-center gap-3">
+            <Settings size={28} />
             Configurações
           </h2>
           <p className="text-muted-foreground mt-1">Gerencie o agendamento e intervalos de postagem</p>
@@ -118,7 +118,7 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-3xl font-heading font-bold text-foreground">{postsPerDay[0]}</span>
+              <span className="text-3xl font-heading font-bold text-accent">{postsPerDay[0]}</span>
               <span className="text-sm text-muted-foreground">posts/dia</span>
             </div>
             <Slider value={postsPerDay} onValueChange={setPostsPerDay} min={1} max={10} step={1} className="w-full" />
@@ -138,7 +138,7 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-3xl font-heading font-bold text-foreground">
+              <span className="text-3xl font-heading font-bold text-primary">
                 {interval[0] >= 60
                   ? `${Math.floor(interval[0] / 60)}h${interval[0] % 60 > 0 ? ` ${interval[0] % 60}m` : ""}`
                   : `${interval[0]}m`}
@@ -212,7 +212,7 @@ export default function SettingsPage() {
                   onClick={() => toggleDay(i)}
                   className={`w-14 h-14 rounded-xl text-sm font-semibold transition-all duration-200 ${
                     active
-                      ? "glass-card-green text-foreground"
+                      ? "glass-card-green text-secondary"
                       : "glass-card text-muted-foreground hover:text-foreground"
                   }`}
                 >

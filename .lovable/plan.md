@@ -1,34 +1,28 @@
 
 
-## Redesign: Tema "Azul Profundo Elegante"
+## Ajuste de Contraste — Menos Azul Monótono
 
-Trocar a paleta neon agressiva por um visual mais sofisticado com azul profundo, branco e lavanda.
+O problema: fundo azul-escuro, cards azul-escuro, texto azul, acentos azul — tudo se mistura.
 
-### Nova paleta
+### Mudanças
 
-- **Fundo**: `#0B1120` (azul muito escuro)
-- **Card/superfície**: `#111827` com borda `#1E293B`
-- **Texto principal**: `#E2E8F0` (cinza claro)
-- **Texto secundário**: `#94A3B8` (slate)
-- **Acento primário**: `#60A5FA` (azul-claro)
-- **Acento secundário**: `#A78BFA` (lavanda)
-- **Sucesso/verde**: `#34D399` (emerald suave)
-- **Destrutivo**: `#F87171`
-- **Glow**: sutil, azul-claro com opacidade baixa
+**1. `src/index.css` — Variáveis CSS**
+- Fundo mais escuro e neutro: `220 20% 6%` (quase preto, menos saturado)
+- Cards com mais contraste: `220 17% 10%` (mais claro que o fundo)
+- Texto principal mais branco: `210 40% 96%` (quase branco puro)
+- Texto secundário mais claro: `215 15% 55%` → `215 20% 65%`
+- Manter primary `#60A5FA` mas usar com moderação
+- Headings em branco puro, não em azul
+- Bordas levemente mais visíveis: `217 25% 22%`
 
-### Arquivos alterados
+**2. Componentes — Reduzir uso de `text-primary` em textos**
+- **`DashboardPage.tsx`**: Números dos stat cards — usar branco (`text-foreground`) para os valores grandes, manter ícones coloridos como diferenciador
+- **`AppSidebar.tsx`**: Título "InstaBot" pode manter azul, mas nav items ativos em branco com borda azul sutil
+- **`AnalyticsPage.tsx`** e **`PostsPage.tsx`**: Headings em branco, dados numéricos em branco, só ícones/badges coloridos
 
-1. **`src/index.css`** — Atualizar todas as variáveis CSS (--background, --card, --primary, --secondary, --neon-*, --glass-*). Reduzir intensidade dos glows. Trocar dot pattern para algo mais sutil.
-
-2. **`tailwind.config.ts`** — Sem mudanças estruturais (já usa variáveis CSS).
-
-3. **`src/components/AppSidebar.tsx`** — Ajustar cor de fundo inline do sidebar para usar a nova paleta.
-
-4. **`src/pages/DashboardPage.tsx`**, **`AnalyticsPage.tsx`**, **`PostsPage.tsx`** — Trocar referências a `neon-text-blue/green/orange` e `glass-card-blue/green/orange` para usar as novas classes com as cores atualizadas.
-
-5. **`src/pages/SettingsPage.tsx`** — Mesmo ajuste de classes de cor.
-
-### Resultado
-
-Visual limpo e premium com azul profundo, sem os neons agressivos. Glows mais sutis e elegantes.
+**3. Resultado esperado**
+- Fundo escuro neutro (não azul)
+- Texto branco limpo para legibilidade
+- Cores (azul, lavanda, verde) aparecem em ícones, badges e gráficos — como acentos, não como cor dominante
+- Cards se destacam do fundo por diferença de luminosidade
 

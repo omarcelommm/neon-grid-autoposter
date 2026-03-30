@@ -70,10 +70,10 @@ export default function DashboardPage() {
   })();
 
   const stats = [
-    { label: "Total de Vídeos", value: status?.total_videos ?? 0, icon: Video, glow: "glass-card-blue", iconClass: "text-primary", textClass: "text-foreground" },
-    { label: "Postados", value: status?.postados ?? 0, icon: CheckCircle, glow: "glass-card-green", iconClass: "text-secondary", textClass: "text-foreground" },
-    { label: "Restantes", value: status?.restantes ?? 0, icon: Clock, glow: "glass-card-orange", iconClass: "text-accent", textClass: "text-foreground" },
-    { label: "Último Post", value: -1, icon: Calendar, glow: "glass-card-blue", iconClass: "text-primary", textClass: "text-foreground", text: status?.ultimo_post ? new Date(status.ultimo_post).toLocaleDateString("pt-BR") : "—" },
+    { label: "Total de Vídeos", value: status?.total_videos ?? 0, icon: Video, glow: "glass-card-blue", textClass: "text-primary" },
+    { label: "Postados", value: status?.postados ?? 0, icon: CheckCircle, glow: "glass-card-green", textClass: "text-secondary" },
+    { label: "Restantes", value: status?.restantes ?? 0, icon: Clock, glow: "glass-card-orange", textClass: "text-accent" },
+    { label: "Último Post", value: -1, icon: Calendar, glow: "glass-card-blue", textClass: "text-primary", text: status?.ultimo_post ? new Date(status.ultimo_post).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : "—" },
   ];
 
   return (
@@ -82,13 +82,17 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s, i) => (
-          <div key={i} className={`${s.glow} p-5 flex flex-col gap-2`} style={{ animationDelay: `${i * 100}ms` }}>
+          <div key={i} className={`${s.glow} p-5 flex flex-col gap-3 group hover:scale-[1.02] transition-transform duration-200`} style={{ animationDelay: `${i * 100}ms` }}>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">{s.label}</span>
-              <s.icon size={18} className={s.iconClass} />
+              <span className="text-xs uppercase tracking-wider text-muted-foreground font-medium">{s.label}</span>
+              <div className={`p-2 rounded-lg bg-muted/50 ${s.textClass}`}>
+                <s.icon size={16} />
+              </div>
             </div>
-            <div className={`text-3xl font-heading font-bold ${s.textClass}`}>
-              {statusLoading ? "—" : s.value === -1 ? s.text : <AnimatedCounter value={s.value} />}
+            <div className="text-3xl font-heading font-bold text-foreground">
+              {statusLoading ? "—" : s.value === -1 ? (
+                <span className="text-xl">{s.text}</span>
+              ) : <AnimatedCounter value={s.value} />}
             </div>
           </div>
         ))}

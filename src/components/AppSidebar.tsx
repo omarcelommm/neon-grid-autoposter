@@ -30,7 +30,7 @@ export function AppSidebar() {
               end
               className={`flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 ${
                 active
-                  ? "glass-card-blue text-foreground"
+                  ? "glass-card-blue neon-text-blue"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
               }`}
               activeClassName=""
