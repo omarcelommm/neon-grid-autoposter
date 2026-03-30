@@ -43,3 +43,24 @@ export const triggerPostNow = async (): Promise<void> => {
   const res = await fetch(`${BASE}/post/now`, { method: "POST" });
   if (!res.ok) throw new Error("Failed to trigger post");
 };
+
+export interface PostAnalytics {
+  filename: string;
+  post_id: string;
+  caption: string;
+  posted_at: string;
+  plays: number;
+  likes: number;
+  comments: number;
+  saved: number;
+  reach: number;
+  hour: number | null;
+  day: number | null;
+}
+
+export const fetchAnalytics = async (): Promise<PostAnalytics[]> => {
+  const res = await fetch(`${BASE}/analytics`);
+  if (!res.ok) throw new Error("Failed to fetch analytics");
+  const data = await res.json();
+  return data.posts ?? [];
+};
