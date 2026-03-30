@@ -148,10 +148,10 @@ export default function AnalyticsPage() {
             <thead>
               <tr className="border-b border-border text-muted-foreground">
                 <th className="text-left p-4 font-medium">Post</th>
-                <th className="text-center p-4 font-medium text-primary">Plays</th>
-                <th className="text-center p-4 font-medium text-secondary">Curtidas</th>
-                <th className="text-center p-4 font-medium text-neon-green">Comentários</th>
-                <th className="text-center p-4 font-medium text-pink-300">Salvamentos</th>
+                 <th className="text-center p-4 font-medium">Plays</th>
+                <th className="text-center p-4 font-medium">Curtidas</th>
+                <th className="text-center p-4 font-medium">Comentários</th>
+                <th className="text-center p-4 font-medium">Salvamentos</th>
                 <th className="text-center p-4 font-medium">Alcance</th>
               </tr>
             </thead>
@@ -164,10 +164,10 @@ export default function AnalyticsPage() {
                   <td className="p-4 font-medium truncate max-w-[200px]">
                     {post.filename.replace(/\.[^.]+$/, "")}
                   </td>
-                  <td className="p-4 text-center text-primary">{post.plays.toLocaleString("pt-BR")}</td>
-                  <td className="p-4 text-center text-secondary">{post.likes.toLocaleString("pt-BR")}</td>
-                  <td className="p-4 text-center text-neon-green">{post.comments.toLocaleString("pt-BR")}</td>
-                  <td className="p-4 text-center text-pink-300">{post.saved.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center">{post.plays.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center">{post.likes.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center">{post.comments.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center">{post.saved.toLocaleString("pt-BR")}</td>
                   <td className="p-4 text-center text-muted-foreground">{post.reach.toLocaleString("pt-BR")}</td>
                 </tr>
               ))}
