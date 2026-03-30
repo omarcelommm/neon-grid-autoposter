@@ -26,14 +26,13 @@ export default function PostsPage() {
         </div>
       )}
 
-      {/* Fila de vídeos */}
       {!queueLoading && (
         <div className="space-y-3">
           <button
             onClick={() => setQueueOpen((o) => !o)}
             className="flex items-center gap-3 w-full text-left group"
           >
-            <Clock size={18} className="text-neon-blue" />
+            <Clock size={18} className="text-primary" />
             <h3 className="font-heading font-semibold text-lg flex-1">
               Fila ({queue?.length ?? 0} vídeos)
             </h3>
@@ -75,11 +74,10 @@ export default function PostsPage() {
         </div>
       )}
 
-      {/* Histórico de posts */}
       {!postsLoading && (
         <div className="space-y-3">
           <div className="flex items-center gap-2">
-            <CheckCircle size={18} className="neon-text-green" />
+            <CheckCircle size={18} className="text-secondary" />
             <h3 className="font-heading font-semibold text-lg">
               Postados ({posts?.length ?? 0})
             </h3>
@@ -123,7 +121,7 @@ export default function PostsPage() {
                               href={`https://www.instagram.com/p/${post.post_id}/`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex text-neon-blue hover:neon-text-blue transition-all"
+                              className="inline-flex text-primary hover:text-primary/80 transition-all"
                             >
                               <ExternalLink size={16} />
                             </a>

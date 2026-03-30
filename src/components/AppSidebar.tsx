@@ -13,7 +13,7 @@ export function AppSidebar() {
   const location = useLocation();
 
   return (
-    <aside className="w-64 min-h-screen border-r border-border flex flex-col" style={{ background: "hsl(230 55% 8%)" }}>
+    <aside className="w-64 min-h-screen border-r border-border flex flex-col bg-sidebar">
       <div className="p-6 border-b border-border">
         <h1 className="font-heading text-xl font-bold neon-text-blue tracking-wide">
           InstaBot

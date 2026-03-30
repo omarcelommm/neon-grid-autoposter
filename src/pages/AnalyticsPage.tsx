@@ -2,24 +2,24 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchAnalytics } from "@/lib/api";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  LineChart, Line, Legend, Cell,
+  Legend,
 } from "recharts";
 import { Loader2 } from "lucide-react";
 
 const DAYS = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 const METRIC_COLORS = {
-  plays: "#00d4ff",
-  likes: "#ff6b35",
-  comments: "#00ff88",
-  saved: "#a855f7",
+  plays: "#60A5FA",
+  likes: "#A78BFA",
+  comments: "#34D399",
+  saved: "#F9A8D4",
 };
 
 const tooltipStyle = {
   contentStyle: {
-    background: "hsl(230 50% 10%)",
-    border: "1px solid hsl(230 30% 22%)",
+    background: "hsl(222 47% 11%)",
+    border: "1px solid hsl(217 33% 20%)",
     borderRadius: 8,
-    color: "#e0e0e0",
+    color: "#E2E8F0",
   },
 };
 
@@ -46,7 +46,6 @@ export default function AnalyticsPage() {
     );
   }
 
-  // Posts por engajamento (comparativo)
   const postData = posts.map((p) => ({
     name: p.filename.replace(/\.[^.]+$/, "").slice(0, 20),
     plays: p.plays,
@@ -56,7 +55,6 @@ export default function AnalyticsPage() {
     total: p.plays + p.likes + p.comments + p.saved,
   }));
 
-  // Melhor horário (média de engajamento por hora)
   const hourMap: Record<number, { total: number; count: number }> = {};
   posts.forEach((p) => {
     if (p.hour !== null) {
@@ -70,7 +68,6 @@ export default function AnalyticsPage() {
     engajamento: hourMap[h] ? Math.round(hourMap[h].total / hourMap[h].count) : 0,
   }));
 
-  // Melhor dia (média de engajamento por dia da semana)
   const dayMap: Record<number, { total: number; count: number }> = {};
   posts.forEach((p) => {
     if (p.day !== null) {
@@ -88,15 +85,14 @@ export default function AnalyticsPage() {
     <div className="space-y-8 animate-fade-in">
       <h2 className="font-heading text-2xl font-bold">Análises</h2>
 
-      {/* Engajamento por post */}
       <div className="glass-card-blue p-6">
         <h3 className="font-heading font-semibold mb-4">Engajamento por Post</h3>
         <ResponsiveContainer width="100%" height={280}>
           <BarChart data={postData} margin={{ left: 0, right: 8 }}>
-            <XAxis dataKey="name" tick={{ fill: "#666", fontSize: 10 }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fill: "#666", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+            <XAxis dataKey="name" tick={{ fill: "#94A3B8", fontSize: 10 }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
             <Tooltip {...tooltipStyle} />
-            <Legend wrapperStyle={{ fontSize: 12, color: "#888" }} />
+            <Legend wrapperStyle={{ fontSize: 12, color: "#94A3B8" }} />
             <Bar dataKey="plays" name="Plays" fill={METRIC_COLORS.plays} radius={[4, 4, 0, 0]} animationDuration={800} />
             <Bar dataKey="likes" name="Curtidas" fill={METRIC_COLORS.likes} radius={[4, 4, 0, 0]} animationDuration={800} />
             <Bar dataKey="comments" name="Comentários" fill={METRIC_COLORS.comments} radius={[4, 4, 0, 0]} animationDuration={800} />
@@ -106,46 +102,43 @@ export default function AnalyticsPage() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Melhor horário */}
         <div className="glass-card-green p-6">
           <h3 className="font-heading font-semibold mb-4">Melhor Horário para Postar</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={hourData}>
               <defs>
                 <linearGradient id="greenGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#00ff88" stopOpacity={0.8} />
-                  <stop offset="100%" stopColor="#00ff88" stopOpacity={0.2} />
+                  <stop offset="0%" stopColor="#34D399" stopOpacity={0.7} />
+                  <stop offset="100%" stopColor="#34D399" stopOpacity={0.1} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="hour" tick={{ fill: "#666", fontSize: 10 }} axisLine={false} tickLine={false} interval={3} />
-              <YAxis tick={{ fill: "#666", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+              <XAxis dataKey="hour" tick={{ fill: "#94A3B8", fontSize: 10 }} axisLine={false} tickLine={false} interval={3} />
+              <YAxis tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
               <Tooltip {...tooltipStyle} />
               <Bar dataKey="engajamento" name="Engajamento médio" fill="url(#greenGrad)" radius={[4, 4, 0, 0]} animationDuration={800} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Melhor dia */}
         <div className="glass-card-orange p-6">
           <h3 className="font-heading font-semibold mb-4">Melhor Dia da Semana</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={dayData}>
               <defs>
-                <linearGradient id="orangeGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#ff6b35" stopOpacity={0.8} />
-                  <stop offset="100%" stopColor="#ff6b35" stopOpacity={0.2} />
+                <linearGradient id="lavenderGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#A78BFA" stopOpacity={0.7} />
+                  <stop offset="100%" stopColor="#A78BFA" stopOpacity={0.1} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="day" tick={{ fill: "#666", fontSize: 11 }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fill: "#666", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+              <XAxis dataKey="day" tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
               <Tooltip {...tooltipStyle} />
-              <Bar dataKey="engajamento" name="Engajamento médio" fill="url(#orangeGrad)" radius={[4, 4, 0, 0]} animationDuration={800} />
+              <Bar dataKey="engajamento" name="Engajamento médio" fill="url(#lavenderGrad)" radius={[4, 4, 0, 0]} animationDuration={800} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* Tabela comparativa */}
       <div className="glass-card overflow-hidden">
         <div className="p-4 border-b border-border">
           <h3 className="font-heading font-semibold">Comparativo de Posts</h3>
@@ -155,10 +148,10 @@ export default function AnalyticsPage() {
             <thead>
               <tr className="border-b border-border text-muted-foreground">
                 <th className="text-left p-4 font-medium">Post</th>
-                <th className="text-center p-4 font-medium text-[#00d4ff]">Plays</th>
-                <th className="text-center p-4 font-medium text-[#ff6b35]">Curtidas</th>
-                <th className="text-center p-4 font-medium text-[#00ff88]">Comentários</th>
-                <th className="text-center p-4 font-medium text-[#a855f7]">Salvamentos</th>
+                <th className="text-center p-4 font-medium text-primary">Plays</th>
+                <th className="text-center p-4 font-medium text-secondary">Curtidas</th>
+                <th className="text-center p-4 font-medium text-neon-green">Comentários</th>
+                <th className="text-center p-4 font-medium text-pink-300">Salvamentos</th>
                 <th className="text-center p-4 font-medium">Alcance</th>
               </tr>
             </thead>
@@ -171,10 +164,10 @@ export default function AnalyticsPage() {
                   <td className="p-4 font-medium truncate max-w-[200px]">
                     {post.filename.replace(/\.[^.]+$/, "")}
                   </td>
-                  <td className="p-4 text-center text-[#00d4ff]">{post.plays.toLocaleString("pt-BR")}</td>
-                  <td className="p-4 text-center text-[#ff6b35]">{post.likes.toLocaleString("pt-BR")}</td>
-                  <td className="p-4 text-center text-[#00ff88]">{post.comments.toLocaleString("pt-BR")}</td>
-                  <td className="p-4 text-center text-[#a855f7]">{post.saved.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center text-primary">{post.plays.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center text-secondary">{post.likes.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center text-neon-green">{post.comments.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center text-pink-300">{post.saved.toLocaleString("pt-BR")}</td>
                   <td className="p-4 text-center text-muted-foreground">{post.reach.toLocaleString("pt-BR")}</td>
                 </tr>
               ))}

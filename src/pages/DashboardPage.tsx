@@ -29,7 +29,6 @@ export default function DashboardPage() {
     onError: () => toast.error("Falha ao iniciar postagem"),
   });
 
-  // Always poll /post/status every 4s — catches both manual and autonomous posts
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
@@ -51,7 +50,6 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, []);
 
-  // Chart data: posts per day last 30 days
   const chartData = (() => {
     if (!posts) return [];
     const counts: Record<string, number> = {};
@@ -72,17 +70,16 @@ export default function DashboardPage() {
   })();
 
   const stats = [
-    { label: "Total de Vídeos", value: status?.total_videos ?? 0, icon: Video, glow: "glass-card-blue", textClass: "neon-text-blue" },
-    { label: "Postados", value: status?.postados ?? 0, icon: CheckCircle, glow: "glass-card-green", textClass: "neon-text-green" },
-    { label: "Restantes", value: status?.restantes ?? 0, icon: Clock, glow: "glass-card-orange", textClass: "neon-text-orange" },
-    { label: "Último Post", value: -1, icon: Calendar, glow: "glass-card-blue", textClass: "neon-text-blue", text: status?.ultimo_post ? new Date(status.ultimo_post).toLocaleDateString("pt-BR") : "—" },
+    { label: "Total de Vídeos", value: status?.total_videos ?? 0, icon: Video, glow: "glass-card-blue", textClass: "text-primary" },
+    { label: "Postados", value: status?.postados ?? 0, icon: CheckCircle, glow: "glass-card-green", textClass: "text-secondary" },
+    { label: "Restantes", value: status?.restantes ?? 0, icon: Clock, glow: "glass-card-orange", textClass: "text-accent" },
+    { label: "Último Post", value: -1, icon: Calendar, glow: "glass-card-blue", textClass: "text-primary", text: status?.ultimo_post ? new Date(status.ultimo_post).toLocaleDateString("pt-BR") : "—" },
   ];
 
   return (
     <div className="space-y-8 animate-fade-in">
       <h2 className="font-heading text-2xl font-bold">Dashboard</h2>
 
-      {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s, i) => (
           <div key={i} className={`${s.glow} p-5 flex flex-col gap-2`} style={{ animationDelay: `${i * 100}ms` }}>
@@ -97,7 +94,6 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      {/* Post Now */}
       <div className="space-y-4">
         <div className="flex items-center gap-4">
           <button
@@ -120,9 +116,9 @@ export default function DashboardPage() {
               return (
                 <div key={step} className={`flex items-center gap-3 text-sm transition-all duration-300 ${isActive ? "text-foreground" : isDone ? "text-muted-foreground" : "text-muted-foreground/40"}`}>
                   {isDone ? (
-                    <CheckCircle size={14} className="text-neon-green shrink-0" />
+                    <CheckCircle size={14} className="text-secondary shrink-0" />
                   ) : isActive ? (
-                    <Loader2 size={14} className="animate-spin text-neon-blue shrink-0" />
+                    <Loader2 size={14} className="animate-spin text-primary shrink-0" />
                   ) : (
                     <Circle size={14} className="shrink-0" />
                   )}
@@ -134,23 +130,22 @@ export default function DashboardPage() {
         )}
       </div>
 
-      {/* Area chart */}
       <div className="glass-card p-6">
         <h3 className="font-heading text-lg font-semibold mb-4">Posts por Dia (Últimos 30 Dias)</h3>
         <ResponsiveContainer width="100%" height={280}>
           <AreaChart data={chartData}>
             <defs>
-              <linearGradient id="neonBlueGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#00d4ff" stopOpacity={0.4} />
-                <stop offset="100%" stopColor="#00d4ff" stopOpacity={0} />
+              <linearGradient id="blueGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#60A5FA" stopOpacity={0.3} />
+                <stop offset="100%" stopColor="#60A5FA" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <XAxis dataKey="date" tick={{ fill: "#666", fontSize: 11 }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fill: "#666", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
+            <XAxis dataKey="date" tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
             <Tooltip
-              contentStyle={{ background: "hsl(230 50% 10%)", border: "1px solid hsl(230 30% 22%)", borderRadius: 8, color: "#e0e0e0" }}
+              contentStyle={{ background: "hsl(222 47% 11%)", border: "1px solid hsl(217 33% 20%)", borderRadius: 8, color: "#E2E8F0" }}
             />
-            <Area type="monotone" dataKey="posts" stroke="#00d4ff" strokeWidth={2} fill="url(#neonBlueGrad)" />
+            <Area type="monotone" dataKey="posts" stroke="#60A5FA" strokeWidth={2} fill="url(#blueGrad)" />
           </AreaChart>
         </ResponsiveContainer>
       </div>
