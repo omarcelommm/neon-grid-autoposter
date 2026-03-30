@@ -118,7 +118,7 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-3xl font-heading font-bold text-accent">{postsPerDay[0]}</span>
+              <span className="text-3xl font-heading font-bold text-foreground">{postsPerDay[0]}</span>
               <span className="text-sm text-muted-foreground">posts/dia</span>
             </div>
             <Slider value={postsPerDay} onValueChange={setPostsPerDay} min={1} max={10} step={1} className="w-full" />
