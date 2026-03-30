@@ -70,10 +70,10 @@ export default function DashboardPage() {
   })();
 
   const stats = [
-    { label: "Total de Vídeos", value: status?.total_videos ?? 0, icon: Video, glow: "glass-card-blue", textClass: "text-primary" },
-    { label: "Postados", value: status?.postados ?? 0, icon: CheckCircle, glow: "glass-card-green", textClass: "text-secondary" },
-    { label: "Restantes", value: status?.restantes ?? 0, icon: Clock, glow: "glass-card-orange", textClass: "text-accent" },
-    { label: "Último Post", value: -1, icon: Calendar, glow: "glass-card-blue", textClass: "text-primary", text: status?.ultimo_post ? new Date(status.ultimo_post).toLocaleDateString("pt-BR") : "—" },
+    { label: "Total de Vídeos", value: status?.total_videos ?? 0, icon: Video, glow: "glass-card-blue", iconClass: "text-primary", textClass: "text-foreground" },
+    { label: "Postados", value: status?.postados ?? 0, icon: CheckCircle, glow: "glass-card-green", iconClass: "text-secondary", textClass: "text-foreground" },
+    { label: "Restantes", value: status?.restantes ?? 0, icon: Clock, glow: "glass-card-orange", iconClass: "text-accent", textClass: "text-foreground" },
+    { label: "Último Post", value: -1, icon: Calendar, glow: "glass-card-blue", iconClass: "text-primary", textClass: "text-foreground", text: status?.ultimo_post ? new Date(status.ultimo_post).toLocaleDateString("pt-BR") : "—" },
   ];
 
   return (
