@@ -212,7 +212,7 @@ export default function SettingsPage() {
                   onClick={() => toggleDay(i)}
                   className={`w-14 h-14 rounded-xl text-sm font-semibold transition-all duration-200 ${
                     active
-                      ? "glass-card-green text-secondary"
+                      ? "glass-card-green text-foreground"
                       : "glass-card text-muted-foreground hover:text-foreground"
                   }`}
                 >

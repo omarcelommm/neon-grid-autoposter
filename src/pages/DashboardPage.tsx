@@ -85,7 +85,7 @@ export default function DashboardPage() {
           <div key={i} className={`${s.glow} p-5 flex flex-col gap-2`} style={{ animationDelay: `${i * 100}ms` }}>
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">{s.label}</span>
-              <s.icon size={18} className={s.textClass} />
+              <s.icon size={18} className={s.iconClass} />
             </div>
             <div className={`text-3xl font-heading font-bold ${s.textClass}`}>
               {statusLoading ? "—" : s.value === -1 ? s.text : <AnimatedCounter value={s.value} />}

@@ -164,10 +164,10 @@ export default function AnalyticsPage() {
                   <td className="p-4 font-medium truncate max-w-[200px]">
                     {post.filename.replace(/\.[^.]+$/, "")}
                   </td>
-                  <td className="p-4 text-center text-primary">{post.plays.toLocaleString("pt-BR")}</td>
-                  <td className="p-4 text-center text-secondary">{post.likes.toLocaleString("pt-BR")}</td>
-                  <td className="p-4 text-center text-neon-green">{post.comments.toLocaleString("pt-BR")}</td>
-                  <td className="p-4 text-center text-pink-300">{post.saved.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center">{post.plays.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center">{post.likes.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center">{post.comments.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center">{post.saved.toLocaleString("pt-BR")}</td>
                   <td className="p-4 text-center text-muted-foreground">{post.reach.toLocaleString("pt-BR")}</td>
                 </tr>
               ))}
