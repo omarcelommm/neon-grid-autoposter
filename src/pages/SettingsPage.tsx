@@ -73,7 +73,7 @@ export default function SettingsPage() {
     <div className="space-y-8 animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="font-heading text-2xl font-bold neon-text-blue flex items-center gap-3">
+          <h2 className="font-heading text-2xl font-bold text-primary flex items-center gap-3">
             <Settings size={28} />
             Configurações
           </h2>
@@ -86,11 +86,10 @@ export default function SettingsPage() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Auto-posting toggle */}
         <Card className="glass-card-blue">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
-              <Zap size={18} className="text-neon-green" />
+              <Zap size={18} className="text-secondary" />
               Postagem Automática
             </CardTitle>
             <CardDescription>Ativar ou desativar o sistema de auto-post</CardDescription>
@@ -99,7 +98,7 @@ export default function SettingsPage() {
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium">
                 {autoPost ? (
-                  <span className="neon-text-green">Ativo</span>
+                  <span className="text-secondary">Ativo</span>
                 ) : (
                   <span className="text-muted-foreground">Inativo</span>
                 )}
@@ -109,18 +108,17 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Posts per day */}
         <Card className="glass-card-blue">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
-              <Calendar size={18} className="text-neon-orange" />
+              <Calendar size={18} className="text-accent" />
               Posts por Dia
             </CardTitle>
             <CardDescription>Limite máximo de posts diários</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-3xl font-heading font-bold neon-text-orange">{postsPerDay[0]}</span>
+              <span className="text-3xl font-heading font-bold text-accent">{postsPerDay[0]}</span>
               <span className="text-sm text-muted-foreground">posts/dia</span>
             </div>
             <Slider value={postsPerDay} onValueChange={setPostsPerDay} min={1} max={10} step={1} className="w-full" />
@@ -130,18 +128,17 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Interval */}
         <Card className="glass-card-blue">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
-              <Clock size={18} className="text-neon-blue" />
+              <Clock size={18} className="text-primary" />
               Intervalo entre Posts
             </CardTitle>
             <CardDescription>Tempo mínimo entre cada postagem (referência)</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-3xl font-heading font-bold neon-text-blue">
+              <span className="text-3xl font-heading font-bold text-primary">
                 {interval[0] >= 60
                   ? `${Math.floor(interval[0] / 60)}h${interval[0] % 60 > 0 ? ` ${interval[0] % 60}m` : ""}`
                   : `${interval[0]}m`}
@@ -155,11 +152,10 @@ export default function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Active hours */}
         <Card className="glass-card-blue">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
-              <Clock size={18} className="text-neon-green" />
+              <Clock size={18} className="text-secondary" />
               Horário Ativo
             </CardTitle>
             <CardDescription>Janela de horário permitida para posts</CardDescription>
@@ -198,11 +194,10 @@ export default function SettingsPage() {
         </Card>
       </div>
 
-      {/* Active days */}
       <Card className="glass-card-blue">
         <CardHeader>
           <CardTitle className="text-lg flex items-center gap-2">
-            <Calendar size={18} className="text-neon-blue" />
+            <Calendar size={18} className="text-primary" />
             Dias Ativos
           </CardTitle>
           <CardDescription>Dias da semana em que o bot pode postar</CardDescription>
@@ -217,7 +212,7 @@ export default function SettingsPage() {
                   onClick={() => toggleDay(i)}
                   className={`w-14 h-14 rounded-xl text-sm font-semibold transition-all duration-200 ${
                     active
-                      ? "glass-card-green neon-text-green"
+                      ? "glass-card-green text-secondary"
                       : "glass-card text-muted-foreground hover:text-foreground"
                   }`}
                 >
