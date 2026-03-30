@@ -73,7 +73,7 @@ export default function DashboardPage() {
     { label: "Total de Vídeos", value: status?.total_videos ?? 0, icon: Video, glow: "glass-card-blue", textClass: "text-primary" },
     { label: "Postados", value: status?.postados ?? 0, icon: CheckCircle, glow: "glass-card-green", textClass: "text-secondary" },
     { label: "Restantes", value: status?.restantes ?? 0, icon: Clock, glow: "glass-card-orange", textClass: "text-accent" },
-    { label: "Último Post", value: -1, icon: Calendar, glow: "glass-card-blue", textClass: "text-primary", text: status?.ultimo_post ? new Date(status.ultimo_post).toLocaleDateString("pt-BR") : "—" },
+    { label: "Último Post", value: -1, icon: Calendar, glow: "glass-card-blue", textClass: "text-primary", text: status?.ultimo_post ? new Date(status.ultimo_post).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : "—" },
   ];
 
   return (
