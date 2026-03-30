@@ -17,6 +17,7 @@ export interface Post {
 
 export interface PostStatus {
   running: boolean;
+  current_step: string | null;
   last_result: string;
 }
 

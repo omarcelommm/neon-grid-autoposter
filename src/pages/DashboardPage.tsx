@@ -1,21 +1,33 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { fetchStatus, fetchPosts, triggerPostNow, fetchPostStatus } from "@/lib/api";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
-import { Video, CheckCircle, Clock, Calendar, Zap, Loader2 } from "lucide-react";
+import { Video, CheckCircle, Clock, Calendar, Zap, Loader2, Circle } from "lucide-react";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+
+const STEPS = [
+  "Selecionando vídeo...",
+  "Transcrevendo áudio...",
+  "Gerando legenda com IA...",
+  "Fazendo upload para Cloudinary...",
+  "Criando container no Instagram...",
+  "Aguardando processamento do Instagram...",
+  "Publicando...",
+];
 
 export default function DashboardPage() {
   const { data: status, isLoading: statusLoading } = useQuery({ queryKey: ["status"], queryFn: fetchStatus });
   const { data: posts } = useQuery({ queryKey: ["posts"], queryFn: fetchPosts });
   const [polling, setPolling] = useState(false);
+  const [currentStep, setCurrentStep] = useState<string | null>(null);
   const pollRef = useRef<ReturnType<typeof setInterval>>();
 
   const postMutation = useMutation({
     mutationFn: triggerPostNow,
     onSuccess: () => {
       setPolling(true);
+      setCurrentStep("Selecionando vídeo...");
       toast.info("Postagem iniciada...");
     },
     onError: () => toast.error("Falha ao iniciar postagem"),
@@ -26,10 +38,17 @@ export default function DashboardPage() {
     pollRef.current = setInterval(async () => {
       try {
         const s = await fetchPostStatus();
+        if (s.current_step) setCurrentStep(s.current_step);
         if (!s.running) {
           clearInterval(pollRef.current);
           setPolling(false);
-          toast.success(s.last_result || "Postagem concluída!");
+          setCurrentStep(null);
+          const result = s.last_result as unknown as { success: boolean; message?: string; filename?: string };
+          if (result?.success) {
+            toast.success(`Publicado: ${result.filename}`);
+          } else {
+            toast.error(result?.message || "Falha na postagem");
+          }
         }
       } catch { /* keep polling */ }
     }, 3000);
@@ -83,16 +102,40 @@ export default function DashboardPage() {
       </div>
 
       {/* Post Now */}
-      <div className="flex items-center gap-4">
-        <button
-          onClick={() => postMutation.mutate()}
-          disabled={postMutation.isPending || polling}
-          className="px-6 py-3 rounded-lg font-heading font-semibold text-sm bg-primary text-primary-foreground pulse-neon disabled:opacity-50 transition-all flex items-center gap-2"
-        >
-          {polling ? <Loader2 size={16} className="animate-spin" /> : <Zap size={16} />}
-          {polling ? "Postando..." : "Postar Agora"}
-        </button>
-        {polling && <span className="text-sm text-muted-foreground">Aguardando resultado...</span>}
+      <div className="space-y-4">
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => postMutation.mutate()}
+            disabled={postMutation.isPending || polling}
+            className="px-6 py-3 rounded-lg font-heading font-semibold text-sm bg-primary text-primary-foreground pulse-neon disabled:opacity-50 transition-all flex items-center gap-2"
+          >
+            {polling ? <Loader2 size={16} className="animate-spin" /> : <Zap size={16} />}
+            {polling ? "Postando..." : "Postar Agora"}
+          </button>
+        </div>
+
+        {polling && (
+          <div className="glass-card-blue p-4 space-y-2 max-w-sm">
+            {STEPS.map((step) => {
+              const currentIndex = currentStep ? STEPS.indexOf(currentStep) : -1;
+              const stepIndex = STEPS.indexOf(step);
+              const isDone = stepIndex < currentIndex;
+              const isActive = step === currentStep;
+              return (
+                <div key={step} className={`flex items-center gap-3 text-sm transition-all duration-300 ${isActive ? "text-foreground" : isDone ? "text-muted-foreground" : "text-muted-foreground/40"}`}>
+                  {isDone ? (
+                    <CheckCircle size={14} className="text-neon-green shrink-0" />
+                  ) : isActive ? (
+                    <Loader2 size={14} className="animate-spin text-neon-blue shrink-0" />
+                  ) : (
+                    <Circle size={14} className="shrink-0" />
+                  )}
+                  {step}
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Area chart */}
