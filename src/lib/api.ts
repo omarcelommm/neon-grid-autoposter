@@ -64,3 +64,10 @@ export const fetchAnalytics = async (): Promise<PostAnalytics[]> => {
   const data = await res.json();
   return data.posts ?? [];
 };
+
+export const fetchQueue = async (): Promise<string[]> => {
+  const res = await fetch(`${BASE}/queue`);
+  if (!res.ok) throw new Error("Failed to fetch queue");
+  const data = await res.json();
+  return data.queue ?? [];
+};
