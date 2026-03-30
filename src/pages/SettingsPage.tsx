@@ -138,7 +138,7 @@ export default function SettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-3xl font-heading font-bold text-primary">
+              <span className="text-3xl font-heading font-bold text-foreground">
                 {interval[0] >= 60
                   ? `${Math.floor(interval[0] / 60)}h${interval[0] % 60 > 0 ? ` ${interval[0] % 60}m` : ""}`
                   : `${interval[0]}m`}
