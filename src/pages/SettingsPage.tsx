@@ -1,21 +1,48 @@
-import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { fetchSettings, saveSettings, AppSettings } from "@/lib/api";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Settings, Clock, Calendar, Zap, Save } from "lucide-react";
+import { Settings, Clock, Calendar, Zap, Save, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 const DAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 export default function SettingsPage() {
+  const queryClient = useQueryClient();
+  const { data: saved, isLoading } = useQuery({ queryKey: ["settings"], queryFn: fetchSettings });
+
   const [autoPost, setAutoPost] = useState(true);
-  const [interval, setInterval] = useState([120]); // minutes
-  const [activeDays, setActiveDays] = useState([1, 2, 3, 4, 5]); // Mon-Fri
-  const [startHour, setStartHour] = useState("09");
-  const [endHour, setEndHour] = useState("21");
   const [postsPerDay, setPostsPerDay] = useState([3]);
+  const [interval, setInterval] = useState([240]);
+  const [startHour, setStartHour] = useState("07");
+  const [endHour, setEndHour] = useState("21");
+  const [activeDays, setActiveDays] = useState([0, 1, 2, 3, 4, 5, 6]);
+
+  useEffect(() => {
+    if (saved) {
+      setAutoPost(saved.auto_post);
+      setPostsPerDay([saved.posts_per_day]);
+      setInterval([saved.interval_minutes]);
+      setStartHour(saved.start_hour);
+      setEndHour(saved.end_hour);
+      setActiveDays(saved.active_days);
+    }
+  }, [saved]);
+
+  const mutation = useMutation({
+    mutationFn: (s: AppSettings) => saveSettings(s),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["settings"] });
+      toast.success("Configurações salvas!", {
+        description: "As alterações já estão em vigor.",
+      });
+    },
+    onError: () => toast.error("Falha ao salvar configurações."),
+  });
 
   const toggleDay = (day: number) => {
     setActiveDays((prev) =>
@@ -24,10 +51,23 @@ export default function SettingsPage() {
   };
 
   const handleSave = () => {
-    toast.success("Configurações salvas com sucesso!", {
-      description: "As alterações serão aplicadas no próximo ciclo.",
+    mutation.mutate({
+      auto_post: autoPost,
+      posts_per_day: postsPerDay[0],
+      interval_minutes: interval[0],
+      start_hour: startHour,
+      end_hour: endHour,
+      active_days: activeDays,
     });
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center gap-2 text-muted-foreground p-8">
+        <Loader2 size={18} className="animate-spin" /> Carregando configurações...
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -39,8 +79,8 @@ export default function SettingsPage() {
           </h2>
           <p className="text-muted-foreground mt-1">Gerencie o agendamento e intervalos de postagem</p>
         </div>
-        <Button onClick={handleSave} className="neon-glow-blue gap-2">
-          <Save size={16} />
+        <Button onClick={handleSave} disabled={mutation.isPending} className="gap-2">
+          {mutation.isPending ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
           Salvar
         </Button>
       </div>
@@ -76,24 +116,16 @@ export default function SettingsPage() {
               <Calendar size={18} className="text-neon-orange" />
               Posts por Dia
             </CardTitle>
-            <CardDescription>Quantidade máxima de posts diários</CardDescription>
+            <CardDescription>Limite máximo de posts diários</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <span className="text-3xl font-heading font-bold neon-text-orange">{postsPerDay[0]}</span>
               <span className="text-sm text-muted-foreground">posts/dia</span>
             </div>
-            <Slider
-              value={postsPerDay}
-              onValueChange={setPostsPerDay}
-              min={1}
-              max={10}
-              step={1}
-              className="w-full"
-            />
+            <Slider value={postsPerDay} onValueChange={setPostsPerDay} min={1} max={10} step={1} className="w-full" />
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>1</span>
-              <span>10</span>
+              <span>1</span><span>10</span>
             </div>
           </CardContent>
         </Card>
@@ -105,7 +137,7 @@ export default function SettingsPage() {
               <Clock size={18} className="text-neon-blue" />
               Intervalo entre Posts
             </CardTitle>
-            <CardDescription>Tempo mínimo entre cada postagem</CardDescription>
+            <CardDescription>Tempo mínimo entre cada postagem (referência)</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
@@ -116,17 +148,9 @@ export default function SettingsPage() {
               </span>
               <span className="text-sm text-muted-foreground">{interval[0]} min</span>
             </div>
-            <Slider
-              value={interval}
-              onValueChange={setInterval}
-              min={30}
-              max={480}
-              step={15}
-              className="w-full"
-            />
+            <Slider value={interval} onValueChange={setInterval} min={30} max={480} step={15} className="w-full" />
             <div className="flex justify-between text-xs text-muted-foreground">
-              <span>30 min</span>
-              <span>8 horas</span>
+              <span>30 min</span><span>8 horas</span>
             </div>
           </CardContent>
         </Card>
@@ -181,7 +205,7 @@ export default function SettingsPage() {
             <Calendar size={18} className="text-neon-blue" />
             Dias Ativos
           </CardTitle>
-          <CardDescription>Selecione os dias da semana em que o bot pode postar</CardDescription>
+          <CardDescription>Dias da semana em que o bot pode postar</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex gap-3 flex-wrap">

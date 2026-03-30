@@ -71,3 +71,27 @@ export const fetchQueue = async (): Promise<string[]> => {
   const data = await res.json();
   return data.queue ?? [];
 };
+
+export interface AppSettings {
+  auto_post: boolean;
+  posts_per_day: number;
+  interval_minutes: number;
+  start_hour: string;
+  end_hour: string;
+  active_days: number[];
+}
+
+export const fetchSettings = async (): Promise<AppSettings> => {
+  const res = await fetch(`${BASE}/settings`);
+  if (!res.ok) throw new Error("Failed to fetch settings");
+  return res.json();
+};
+
+export const saveSettings = async (settings: AppSettings): Promise<void> => {
+  const res = await fetch(`${BASE}/settings`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(settings),
+  });
+  if (!res.ok) throw new Error("Failed to save settings");
+};
