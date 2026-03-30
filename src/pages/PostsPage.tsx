@@ -7,17 +7,17 @@ export default function PostsPage() {
 
   return (
     <div className="space-y-6 animate-fade-in">
-      <h2 className="font-heading text-2xl font-bold">Posts History</h2>
+      <h2 className="font-heading text-2xl font-bold">Histórico de Posts</h2>
 
       {isLoading && (
         <div className="flex items-center gap-2 text-muted-foreground">
-          <Loader2 size={18} className="animate-spin" /> Loading...
+          <Loader2 size={18} className="animate-spin" /> Carregando...
         </div>
       )}
 
-      {error && <p className="text-destructive">Failed to load posts.</p>}
+      {error && <p className="text-destructive">Falha ao carregar posts.</p>}
 
-      {posts && posts.length === 0 && <p className="text-muted-foreground">No posts yet.</p>}
+      {posts && posts.length === 0 && <p className="text-muted-foreground">Nenhum post ainda.</p>}
 
       {posts && posts.length > 0 && (
         <div className="glass-card overflow-hidden">
@@ -25,9 +25,9 @@ export default function PostsPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-muted-foreground">
-                  <th className="text-left p-4 font-medium">Filename</th>
-                  <th className="text-left p-4 font-medium">Date</th>
-                  <th className="text-left p-4 font-medium hidden md:table-cell">Caption</th>
+                  <th className="text-left p-4 font-medium">Arquivo</th>
+                  <th className="text-left p-4 font-medium">Data</th>
+                  <th className="text-left p-4 font-medium hidden md:table-cell">Legenda</th>
                   <th className="text-center p-4 font-medium w-16">Link</th>
                 </tr>
               </thead>
@@ -40,7 +40,7 @@ export default function PostsPage() {
                   >
                     <td className="p-4 font-medium truncate max-w-[200px]">{post.filename}</td>
                     <td className="p-4 text-muted-foreground whitespace-nowrap">
-                      {new Date(post.posted_at).toLocaleString()}
+                      {new Date(post.posted_at).toLocaleString("pt-BR")}
                     </td>
                     <td className="p-4 text-muted-foreground hidden md:table-cell">
                       <span className="line-clamp-2 max-w-[300px] block">{post.caption}</span>

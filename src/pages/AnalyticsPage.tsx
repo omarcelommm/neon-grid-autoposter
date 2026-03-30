@@ -7,7 +7,7 @@ import {
 } from "recharts";
 import { Loader2 } from "lucide-react";
 
-const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const DAYS = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 export default function AnalyticsPage() {
   const { data: status } = useQuery({ queryKey: ["status"], queryFn: fetchStatus });
@@ -15,8 +15,8 @@ export default function AnalyticsPage() {
 
   const donutData = status
     ? [
-        { name: "Posted", value: status.postados, color: "#ff6b35" },
-        { name: "Remaining", value: status.restantes, color: "#00d4ff" },
+        { name: "Postados", value: status.postados, color: "#ff6b35" },
+        { name: "Restantes", value: status.restantes, color: "#00d4ff" },
       ]
     : [];
 
@@ -41,19 +41,19 @@ export default function AnalyticsPage() {
   if (isLoading) {
     return (
       <div className="flex items-center gap-2 text-muted-foreground p-8">
-        <Loader2 size={18} className="animate-spin" /> Loading analytics...
+        <Loader2 size={18} className="animate-spin" /> Carregando analytics...
       </div>
     );
   }
 
   return (
     <div className="space-y-8 animate-fade-in">
-      <h2 className="font-heading text-2xl font-bold">Analytics</h2>
+      <h2 className="font-heading text-2xl font-bold">Análises</h2>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Donut */}
         <div className="glass-card-orange p-6">
-          <h3 className="font-heading font-semibold mb-4">Posted vs Remaining</h3>
+          <h3 className="font-heading font-semibold mb-4">Postados vs Restantes</h3>
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie data={donutData} innerRadius={60} outerRadius={90} dataKey="value" paddingAngle={4} animationDuration={800}>
@@ -74,7 +74,7 @@ export default function AnalyticsPage() {
 
         {/* Bar chart - posts per day of week */}
         <div className="glass-card-green p-6">
-          <h3 className="font-heading font-semibold mb-4">Posts by Day of Week</h3>
+          <h3 className="font-heading font-semibold mb-4">Posts por Dia da Semana</h3>
           <ResponsiveContainer width="100%" height={250}>
             <BarChart data={dayData}>
               <defs>
@@ -94,7 +94,7 @@ export default function AnalyticsPage() {
 
       {/* Line chart - posts per hour */}
       <div className="glass-card-blue p-6">
-        <h3 className="font-heading font-semibold mb-4">Posts by Hour of Day</h3>
+        <h3 className="font-heading font-semibold mb-4">Posts por Hora do Dia</h3>
         <ResponsiveContainer width="100%" height={280}>
           <LineChart data={hourData}>
             <defs>

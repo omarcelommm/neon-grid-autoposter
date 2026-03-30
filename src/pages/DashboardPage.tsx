@@ -16,9 +16,9 @@ export default function DashboardPage() {
     mutationFn: triggerPostNow,
     onSuccess: () => {
       setPolling(true);
-      toast.info("Posting started...");
+      toast.info("Postagem iniciada...");
     },
-    onError: () => toast.error("Failed to trigger post"),
+    onError: () => toast.error("Falha ao iniciar postagem"),
   });
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export default function DashboardPage() {
         if (!s.running) {
           clearInterval(pollRef.current);
           setPolling(false);
-          toast.success(s.last_result || "Post completed!");
+          toast.success(s.last_result || "Postagem concluída!");
         }
       } catch { /* keep polling */ }
     }, 3000);
@@ -57,10 +57,10 @@ export default function DashboardPage() {
   })();
 
   const stats = [
-    { label: "Total Videos", value: status?.total_videos ?? 0, icon: Video, glow: "glass-card-blue", textClass: "neon-text-blue" },
-    { label: "Posted", value: status?.postados ?? 0, icon: CheckCircle, glow: "glass-card-green", textClass: "neon-text-green" },
-    { label: "Remaining", value: status?.restantes ?? 0, icon: Clock, glow: "glass-card-orange", textClass: "neon-text-orange" },
-    { label: "Last Post", value: -1, icon: Calendar, glow: "glass-card-blue", textClass: "neon-text-blue", text: status?.ultimo_post ? new Date(status.ultimo_post).toLocaleDateString() : "—" },
+    { label: "Total de Vídeos", value: status?.total_videos ?? 0, icon: Video, glow: "glass-card-blue", textClass: "neon-text-blue" },
+    { label: "Postados", value: status?.postados ?? 0, icon: CheckCircle, glow: "glass-card-green", textClass: "neon-text-green" },
+    { label: "Restantes", value: status?.restantes ?? 0, icon: Clock, glow: "glass-card-orange", textClass: "neon-text-orange" },
+    { label: "Último Post", value: -1, icon: Calendar, glow: "glass-card-blue", textClass: "neon-text-blue", text: status?.ultimo_post ? new Date(status.ultimo_post).toLocaleDateString("pt-BR") : "—" },
   ];
 
   return (
@@ -90,14 +90,14 @@ export default function DashboardPage() {
           className="px-6 py-3 rounded-lg font-heading font-semibold text-sm bg-primary text-primary-foreground pulse-neon disabled:opacity-50 transition-all flex items-center gap-2"
         >
           {polling ? <Loader2 size={16} className="animate-spin" /> : <Zap size={16} />}
-          {polling ? "Posting..." : "Post Now"}
+          {polling ? "Postando..." : "Postar Agora"}
         </button>
-        {polling && <span className="text-sm text-muted-foreground">Waiting for result...</span>}
+        {polling && <span className="text-sm text-muted-foreground">Aguardando resultado...</span>}
       </div>
 
       {/* Area chart */}
       <div className="glass-card p-6">
-        <h3 className="font-heading text-lg font-semibold mb-4">Posts per Day (Last 30 Days)</h3>
+        <h3 className="font-heading text-lg font-semibold mb-4">Posts por Dia (Últimos 30 Dias)</h3>
         <ResponsiveContainer width="100%" height={280}>
           <AreaChart data={chartData}>
             <defs>

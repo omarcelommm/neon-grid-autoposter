@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 const items = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Posts", url: "/posts", icon: FileText },
-  { title: "Analytics", url: "/analytics", icon: BarChart3 },
+  { title: "Análises", url: "/analytics", icon: BarChart3 },
 ];
 
 export function AppSidebar() {
@@ -17,7 +17,7 @@ export function AppSidebar() {
         <h1 className="font-heading text-xl font-bold neon-text-blue tracking-wide">
           InstaBot
         </h1>
-        <p className="text-xs text-muted-foreground mt-1">Auto Poster System</p>
+        <p className="text-xs text-muted-foreground mt-1">Sistema de Posts Automático</p>
       </div>
       <nav className="flex-1 p-4 space-y-1">
         {items.map((item) => {
@@ -43,7 +43,7 @@ export function AppSidebar() {
       <div className="p-4 border-t border-border">
         <div className="glass-card p-3 text-center">
           <div className="w-2 h-2 rounded-full bg-neon-green mx-auto mb-1 shadow-[0_0_8px_hsl(155,100%,50%)]" />
-          <p className="text-xs text-muted-foreground">System Online</p>
+          <p className="text-xs text-muted-foreground">Sistema Online</p>
         </div>
       </div>
     </aside>
