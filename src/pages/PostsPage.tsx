@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchPosts, fetchQueue } from "@/lib/api";
-import { ExternalLink, Loader2, Clock, CheckCircle } from "lucide-react";
+import { ExternalLink, Loader2, Clock, CheckCircle, ChevronDown } from "lucide-react";
+import { useState } from "react";
 
 export default function PostsPage() {
   const { data: posts, isLoading: postsLoading, error: postsError } = useQuery({
@@ -13,6 +14,7 @@ export default function PostsPage() {
   });
 
   const isLoading = postsLoading || queueLoading;
+  const [queueOpen, setQueueOpen] = useState(false);
 
   return (
     <div className="space-y-8 animate-fade-in">
@@ -27,18 +29,25 @@ export default function PostsPage() {
       {/* Fila de vídeos */}
       {!queueLoading && (
         <div className="space-y-3">
-          <div className="flex items-center gap-2">
+          <button
+            onClick={() => setQueueOpen((o) => !o)}
+            className="flex items-center gap-3 w-full text-left group"
+          >
             <Clock size={18} className="text-neon-blue" />
-            <h3 className="font-heading font-semibold text-lg">
+            <h3 className="font-heading font-semibold text-lg flex-1">
               Fila ({queue?.length ?? 0} vídeos)
             </h3>
-          </div>
+            <ChevronDown
+              size={18}
+              className={`text-muted-foreground transition-transform duration-200 ${queueOpen ? "rotate-180" : ""}`}
+            />
+          </button>
 
-          {queue && queue.length === 0 && (
+          {queueOpen && queue && queue.length === 0 && (
             <p className="text-muted-foreground text-sm">Nenhum vídeo na fila.</p>
           )}
 
-          {queue && queue.length > 0 && (
+          {queueOpen && queue && queue.length > 0 && (
             <div className="glass-card-blue overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
