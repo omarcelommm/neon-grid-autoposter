@@ -148,10 +148,10 @@ export default function AnalyticsPage() {
             <thead>
               <tr className="border-b border-border text-muted-foreground">
                 <th className="text-left p-4 font-medium">Post</th>
-                <th className="text-center p-4 font-medium text-primary">Plays</th>
-                <th className="text-center p-4 font-medium text-secondary">Curtidas</th>
-                <th className="text-center p-4 font-medium text-neon-green">Comentários</th>
-                <th className="text-center p-4 font-medium text-pink-300">Salvamentos</th>
+                 <th className="text-center p-4 font-medium">Plays</th>
+                <th className="text-center p-4 font-medium">Curtidas</th>
+                <th className="text-center p-4 font-medium">Comentários</th>
+                <th className="text-center p-4 font-medium">Salvamentos</th>
                 <th className="text-center p-4 font-medium">Alcance</th>
               </tr>
             </thead>
