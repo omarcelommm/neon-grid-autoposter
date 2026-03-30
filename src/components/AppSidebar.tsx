@@ -1,4 +1,4 @@
-import { LayoutDashboard, FileText, BarChart3 } from "lucide-react";
+import { LayoutDashboard, FileText, BarChart3, Settings } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 
@@ -6,6 +6,7 @@ const items = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
   { title: "Posts", url: "/posts", icon: FileText },
   { title: "Análises", url: "/analytics", icon: BarChart3 },
+  { title: "Configurações", url: "/settings", icon: Settings },
 ];
 
 export function AppSidebar() {
