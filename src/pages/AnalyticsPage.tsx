@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchAnalytics } from "@/lib/api";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  Legend,
+  Legend, LineChart, Line,
 } from "recharts";
 import { Loader2 } from "lucide-react";
 
@@ -46,14 +46,25 @@ export default function AnalyticsPage() {
     );
   }
 
-  const postData = posts.map((p) => ({
-    name: p.filename.replace(/\.[^.]+$/, "").slice(0, 20),
-    plays: p.plays,
-    likes: p.likes,
-    comments: p.comments,
-    saved: p.saved,
-    total: p.plays + p.likes + p.comments + p.saved,
-  }));
+  const postData = posts
+    .slice()
+    .sort((a, b) => (a.posted_at || "").localeCompare(b.posted_at || ""))
+    .map((p) => {
+      const dt = p.posted_at ? new Date(p.posted_at) : null;
+      const label = dt
+        ? dt.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })
+        : "—";
+      return {
+        name: p.filename.replace(/\.[^.]+$/, "").slice(0, 20),
+        label,
+        plays: p.plays,
+        likes: p.likes,
+        comments: p.comments,
+        saved: p.saved,
+        total: p.plays + p.likes + p.comments + p.saved,
+        posted_at: p.posted_at,
+      };
+    });
 
   const hourMap: Record<number, { total: number; count: number }> = {};
   posts.forEach((p) => {
@@ -86,18 +97,18 @@ export default function AnalyticsPage() {
       <h2 className="font-heading text-2xl font-bold">Análises</h2>
 
       <div className="glass-card-blue p-6">
-        <h3 className="font-heading font-semibold mb-4">Engajamento por Post</h3>
+        <h3 className="font-heading font-semibold mb-4">Engajamento por Post ao Longo do Tempo</h3>
         <ResponsiveContainer width="100%" height={280}>
-          <BarChart data={postData} margin={{ left: 0, right: 8 }}>
-            <XAxis dataKey="name" tick={{ fill: "#94A3B8", fontSize: 10 }} axisLine={false} tickLine={false} />
+          <LineChart data={postData} margin={{ left: 0, right: 8 }}>
+            <XAxis dataKey="label" tick={{ fill: "#94A3B8", fontSize: 10 }} axisLine={false} tickLine={false} />
             <YAxis tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
             <Tooltip {...tooltipStyle} />
             <Legend wrapperStyle={{ fontSize: 12, color: "#94A3B8" }} />
-            <Bar dataKey="plays" name="Plays" fill={METRIC_COLORS.plays} radius={[4, 4, 0, 0]} animationDuration={800} />
-            <Bar dataKey="likes" name="Curtidas" fill={METRIC_COLORS.likes} radius={[4, 4, 0, 0]} animationDuration={800} />
-            <Bar dataKey="comments" name="Comentários" fill={METRIC_COLORS.comments} radius={[4, 4, 0, 0]} animationDuration={800} />
-            <Bar dataKey="saved" name="Salvamentos" fill={METRIC_COLORS.saved} radius={[4, 4, 0, 0]} animationDuration={800} />
-          </BarChart>
+            <Line dataKey="plays" name="Plays" stroke={METRIC_COLORS.plays} strokeWidth={2} dot={{ r: 4 }} animationDuration={800} />
+            <Line dataKey="likes" name="Curtidas" stroke={METRIC_COLORS.likes} strokeWidth={2} dot={{ r: 4 }} animationDuration={800} />
+            <Line dataKey="comments" name="Comentários" stroke={METRIC_COLORS.comments} strokeWidth={2} dot={{ r: 4 }} animationDuration={800} />
+            <Line dataKey="saved" name="Salvamentos" stroke={METRIC_COLORS.saved} strokeWidth={2} dot={{ r: 4 }} animationDuration={800} />
+          </LineChart>
         </ResponsiveContainer>
       </div>
 
@@ -148,6 +159,7 @@ export default function AnalyticsPage() {
             <thead>
               <tr className="border-b border-border text-muted-foreground">
                 <th className="text-left p-4 font-medium">Post</th>
+                <th className="text-center p-4 font-medium text-muted-foreground">Horário</th>
                 <th className="text-center p-4 font-medium text-primary">Plays</th>
                 <th className="text-center p-4 font-medium text-secondary">Curtidas</th>
                 <th className="text-center p-4 font-medium text-neon-green">Comentários</th>
@@ -163,6 +175,11 @@ export default function AnalyticsPage() {
                 >
                   <td className="p-4 font-medium truncate max-w-[200px]">
                     {post.filename.replace(/\.[^.]+$/, "")}
+                  </td>
+                  <td className="p-4 text-center text-muted-foreground whitespace-nowrap text-xs">
+                    {post.posted_at
+                      ? new Date(post.posted_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })
+                      : "—"}
                   </td>
                   <td className="p-4 text-center text-primary">{post.plays.toLocaleString("pt-BR")}</td>
                   <td className="p-4 text-center text-secondary">{post.likes.toLocaleString("pt-BR")}</td>
