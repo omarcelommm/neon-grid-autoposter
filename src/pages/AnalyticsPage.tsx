@@ -219,7 +219,7 @@ export default function AnalyticsPage() {
                     <div className="flex items-center gap-2">
                       <span className="truncate">{post.filename.replace(/\.[^.]+$/, "")}</span>
                       {post.permalink && (
-                        <a href={post.permalink} target="_blank" rel="noopener noreferrer" className="shrink-0 text-muted-foreground hover:text-primary transition-colors">
+                        <a href={post.permalink} className="shrink-0 text-muted-foreground hover:text-primary transition-colors">
                           <ExternalLink size={14} />
                         </a>
                       )}
