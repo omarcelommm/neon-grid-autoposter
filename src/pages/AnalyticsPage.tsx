@@ -12,6 +12,7 @@ const METRIC_COLORS = {
   likes: "#A78BFA",
   comments: "#34D399",
   saved: "#F9A8D4",
+  avg_watch_s: "#FCD34D",
 };
 
 const tooltipStyle = {
@@ -30,6 +31,11 @@ function fmtWatchTime(ms: number): string {
   const m = Math.floor(s / 60);
   const rem = s % 60;
   return rem > 0 ? `${m}m ${rem}s` : `${m}m`;
+}
+
+function avgWatchTime(ms: number, reach: number): string {
+  if (!ms || !reach) return "—";
+  return fmtWatchTime(Math.round(ms / reach));
 }
 
 export default function AnalyticsPage() {
@@ -63,6 +69,7 @@ export default function AnalyticsPage() {
       const label = dt
         ? dt.toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })
         : "—";
+      const avgMs = p.reach > 0 ? Math.round(p.watch_time_ms / p.reach) : 0;
       return {
         name: p.filename.replace(/\.[^.]+$/, "").slice(0, 20),
         label,
@@ -70,6 +77,7 @@ export default function AnalyticsPage() {
         likes: p.likes,
         comments: p.comments,
         saved: p.saved,
+        avg_watch_s: Math.round(avgMs / 1000),
         total: p.reach + p.likes + p.comments + p.saved,
         posted_at: p.posted_at,
       };
@@ -117,6 +125,7 @@ export default function AnalyticsPage() {
             <Line dataKey="likes" name="Curtidas" stroke={METRIC_COLORS.likes} strokeWidth={2} dot={{ r: 4 }} animationDuration={800} />
             <Line dataKey="comments" name="Comentários" stroke={METRIC_COLORS.comments} strokeWidth={2} dot={{ r: 4 }} animationDuration={800} />
             <Line dataKey="saved" name="Salvamentos" stroke={METRIC_COLORS.saved} strokeWidth={2} dot={{ r: 4 }} animationDuration={800} />
+            <Line dataKey="avg_watch_s" name="Tempo Médio (s)" stroke={METRIC_COLORS.avg_watch_s} strokeWidth={2} dot={{ r: 4 }} strokeDasharray="4 3" animationDuration={800} />
           </LineChart>
         </ResponsiveContainer>
       </div>
@@ -174,6 +183,7 @@ export default function AnalyticsPage() {
                 <th className="text-center p-4 font-medium text-neon-green">Comentários</th>
                 <th className="text-center p-4 font-medium text-pink-300">Salvamentos</th>
                 <th className="text-center p-4 font-medium text-muted-foreground">Tempo Assistido</th>
+                <th className="text-center p-4 font-medium text-yellow-300">Tempo Médio</th>
               </tr>
             </thead>
             <tbody>
@@ -195,6 +205,7 @@ export default function AnalyticsPage() {
                   <td className="p-4 text-center text-neon-green">{post.comments.toLocaleString("pt-BR")}</td>
                   <td className="p-4 text-center text-pink-300">{post.saved.toLocaleString("pt-BR")}</td>
                   <td className="p-4 text-center text-muted-foreground">{fmtWatchTime(post.watch_time_ms ?? 0)}</td>
+                  <td className="p-4 text-center text-yellow-300">{avgWatchTime(post.watch_time_ms ?? 0, post.reach ?? 0)}</td>
                 </tr>
               ))}
             </tbody>
