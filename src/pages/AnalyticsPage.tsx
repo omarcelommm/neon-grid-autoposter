@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 
 const DAYS = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 const METRIC_COLORS = {
-  plays: "#60A5FA",
+  reach: "#60A5FA",
   likes: "#A78BFA",
   comments: "#34D399",
   saved: "#F9A8D4",
@@ -22,6 +22,15 @@ const tooltipStyle = {
     color: "#E2E8F0",
   },
 };
+
+function fmtWatchTime(ms: number): string {
+  if (!ms) return "—";
+  const s = Math.round(ms / 1000);
+  if (s < 60) return `${s}s`;
+  const m = Math.floor(s / 60);
+  const rem = s % 60;
+  return rem > 0 ? `${m}m ${rem}s` : `${m}m`;
+}
 
 export default function AnalyticsPage() {
   const { data: posts, isLoading } = useQuery({
@@ -57,11 +66,11 @@ export default function AnalyticsPage() {
       return {
         name: p.filename.replace(/\.[^.]+$/, "").slice(0, 20),
         label,
-        plays: p.plays,
+        reach: p.reach,
         likes: p.likes,
         comments: p.comments,
         saved: p.saved,
-        total: p.plays + p.likes + p.comments + p.saved,
+        total: p.reach + p.likes + p.comments + p.saved,
         posted_at: p.posted_at,
       };
     });
@@ -70,7 +79,7 @@ export default function AnalyticsPage() {
   posts.forEach((p) => {
     if (p.hour !== null) {
       if (!hourMap[p.hour]) hourMap[p.hour] = { total: 0, count: 0 };
-      hourMap[p.hour].total += p.plays + p.likes + p.comments + p.saved;
+      hourMap[p.hour].total += p.reach + p.likes + p.comments + p.saved;
       hourMap[p.hour].count += 1;
     }
   });
@@ -83,7 +92,7 @@ export default function AnalyticsPage() {
   posts.forEach((p) => {
     if (p.day !== null) {
       if (!dayMap[p.day]) dayMap[p.day] = { total: 0, count: 0 };
-      dayMap[p.day].total += p.plays + p.likes + p.comments + p.saved;
+      dayMap[p.day].total += p.reach + p.likes + p.comments + p.saved;
       dayMap[p.day].count += 1;
     }
   });
@@ -104,7 +113,7 @@ export default function AnalyticsPage() {
             <YAxis tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
             <Tooltip {...tooltipStyle} />
             <Legend wrapperStyle={{ fontSize: 12, color: "#94A3B8" }} />
-            <Line dataKey="plays" name="Plays" stroke={METRIC_COLORS.plays} strokeWidth={2} dot={{ r: 4 }} animationDuration={800} />
+            <Line dataKey="reach" name="Alcance" stroke={METRIC_COLORS.reach} strokeWidth={2} dot={{ r: 4 }} animationDuration={800} />
             <Line dataKey="likes" name="Curtidas" stroke={METRIC_COLORS.likes} strokeWidth={2} dot={{ r: 4 }} animationDuration={800} />
             <Line dataKey="comments" name="Comentários" stroke={METRIC_COLORS.comments} strokeWidth={2} dot={{ r: 4 }} animationDuration={800} />
             <Line dataKey="saved" name="Salvamentos" stroke={METRIC_COLORS.saved} strokeWidth={2} dot={{ r: 4 }} animationDuration={800} />
@@ -160,11 +169,11 @@ export default function AnalyticsPage() {
               <tr className="border-b border-border text-muted-foreground">
                 <th className="text-left p-4 font-medium">Post</th>
                 <th className="text-center p-4 font-medium text-muted-foreground">Horário</th>
-                <th className="text-center p-4 font-medium text-primary">Plays</th>
+                <th className="text-center p-4 font-medium text-primary">Alcance</th>
                 <th className="text-center p-4 font-medium text-secondary">Curtidas</th>
                 <th className="text-center p-4 font-medium text-neon-green">Comentários</th>
                 <th className="text-center p-4 font-medium text-pink-300">Salvamentos</th>
-                <th className="text-center p-4 font-medium">Alcance</th>
+                <th className="text-center p-4 font-medium text-muted-foreground">Tempo Assistido</th>
               </tr>
             </thead>
             <tbody>
@@ -181,11 +190,11 @@ export default function AnalyticsPage() {
                       ? new Date(post.posted_at).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })
                       : "—"}
                   </td>
-                  <td className="p-4 text-center text-primary">{post.plays.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center text-primary">{(post.reach ?? 0).toLocaleString("pt-BR")}</td>
                   <td className="p-4 text-center text-secondary">{post.likes.toLocaleString("pt-BR")}</td>
                   <td className="p-4 text-center text-neon-green">{post.comments.toLocaleString("pt-BR")}</td>
                   <td className="p-4 text-center text-pink-300">{post.saved.toLocaleString("pt-BR")}</td>
-                  <td className="p-4 text-center text-muted-foreground">{post.reach.toLocaleString("pt-BR")}</td>
+                  <td className="p-4 text-center text-muted-foreground">{fmtWatchTime(post.watch_time_ms ?? 0)}</td>
                 </tr>
               ))}
             </tbody>

@@ -50,11 +50,11 @@ export interface PostAnalytics {
   post_id: string;
   caption: string;
   posted_at: string;
-  plays: number;
+  reach: number;
   likes: number;
   comments: number;
   saved: number;
-  reach: number;
+  watch_time_ms: number;
   hour: number | null;
   day: number | null;
 }
