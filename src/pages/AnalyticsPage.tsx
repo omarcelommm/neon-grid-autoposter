@@ -5,6 +5,15 @@ import {
   Legend, LineChart, Line,
 } from "recharts";
 import { Loader2 } from "lucide-react";
+import { useState } from "react";
+
+type SortKey = "posted_at" | "reach" | "engagement";
+
+const SORT_OPTIONS: { value: SortKey; label: string }[] = [
+  { value: "posted_at", label: "Mais recente" },
+  { value: "reach", label: "Maior alcance" },
+  { value: "engagement", label: "Maior engajamento" },
+];
 
 const DAYS = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 const METRIC_COLORS = {
@@ -43,6 +52,7 @@ export default function AnalyticsPage() {
     queryKey: ["analytics"],
     queryFn: fetchAnalytics,
   });
+  const [sortKey, setSortKey] = useState<SortKey>("posted_at");
 
   if (isLoading) {
     return (
@@ -169,8 +179,17 @@ export default function AnalyticsPage() {
       </div>
 
       <div className="glass-card overflow-hidden">
-        <div className="p-4 border-b border-border">
+        <div className="p-4 border-b border-border flex items-center justify-between gap-4">
           <h3 className="font-heading font-semibold">Comparativo de Posts</h3>
+          <select
+            value={sortKey}
+            onChange={(e) => setSortKey(e.target.value as SortKey)}
+            className="bg-muted text-sm text-foreground border border-border rounded-md px-3 py-1.5 focus:outline-none focus:ring-1 focus:ring-primary"
+          >
+            {SORT_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>{o.label}</option>
+            ))}
+          </select>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
@@ -187,7 +206,11 @@ export default function AnalyticsPage() {
               </tr>
             </thead>
             <tbody>
-              {posts.map((post, i) => (
+              {[...posts].sort((a, b) => {
+                if (sortKey === "reach") return (b.reach ?? 0) - (a.reach ?? 0);
+                if (sortKey === "engagement") return (b.likes + b.comments + b.saved) - (a.likes + a.comments + a.saved);
+                return (b.posted_at || "").localeCompare(a.posted_at || "");
+              }).map((post, i) => (
                 <tr
                   key={post.post_id || i}
                   className="border-b border-border/50 hover:bg-muted/20 transition-colors"
