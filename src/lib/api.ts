@@ -55,6 +55,7 @@ export interface PostAnalytics {
   comments: number;
   saved: number;
   watch_time_ms: number;
+  permalink: string | null;
   hour: number | null;
   day: number | null;
 }

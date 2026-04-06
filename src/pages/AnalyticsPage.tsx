@@ -4,7 +4,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   Legend, LineChart, Line,
 } from "recharts";
-import { Loader2 } from "lucide-react";
+import { Loader2, ExternalLink } from "lucide-react";
 import { useState } from "react";
 
 type SortKey = "posted_at" | "reach" | "engagement";
@@ -216,7 +216,14 @@ export default function AnalyticsPage() {
                   className="border-b border-border/50 hover:bg-muted/20 transition-colors"
                 >
                   <td className="p-4 font-medium truncate max-w-[200px]">
-                    {post.filename.replace(/\.[^.]+$/, "")}
+                    <div className="flex items-center gap-2">
+                      <span className="truncate">{post.filename.replace(/\.[^.]+$/, "")}</span>
+                      {post.permalink && (
+                        <a href={post.permalink} target="_blank" rel="noopener noreferrer" className="shrink-0 text-muted-foreground hover:text-primary transition-colors">
+                          <ExternalLink size={14} />
+                        </a>
+                      )}
+                    </div>
                   </td>
                   <td className="p-4 text-center text-muted-foreground whitespace-nowrap text-xs">
                     {post.posted_at
