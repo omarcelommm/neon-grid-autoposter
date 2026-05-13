@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchAnalytics } from "@/lib/api";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  Legend, LineChart, Line, AreaChart, Area,
+  AreaChart, Area,
 } from "recharts";
 import { Loader2, ExternalLink, Eye, Heart, Trophy, Clock4 } from "lucide-react";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
@@ -184,19 +184,30 @@ export default function AnalyticsPage() {
         </ResponsiveContainer>
       </div>
 
-      <div className="glass-card-green p-6">
-        <h3 className="font-heading font-semibold mb-4">Engajamento ao Longo do Tempo</h3>
-        <ResponsiveContainer width="100%" height={260}>
-          <LineChart data={timeSeries}>
-            <XAxis dataKey="label" tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
-            <YAxis tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} />
-            <Tooltip {...tooltipStyle} />
-            <Legend wrapperStyle={{ fontSize: 12, color: "#94A3B8" }} />
-            <Line dataKey="likes" name="Curtidas" stroke="#A78BFA" strokeWidth={2} dot={{ r: 3 }} animationDuration={800} />
-            <Line dataKey="comments" name="Comentários" stroke="#34D399" strokeWidth={2} dot={{ r: 3 }} animationDuration={800} />
-            <Line dataKey="saved" name="Salvamentos" stroke="#F9A8D4" strokeWidth={2} dot={{ r: 3 }} animationDuration={800} />
-          </LineChart>
-        </ResponsiveContainer>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {[
+          { key: "likes", label: "Curtidas", color: "#A78BFA", gradId: "likesGrad", card: "glass-card-green" },
+          { key: "comments", label: "Comentários", color: "#34D399", gradId: "commentsGrad", card: "glass-card-green" },
+          { key: "saved", label: "Salvamentos", color: "#F9A8D4", gradId: "savedGrad", card: "glass-card-green" },
+        ].map((m) => (
+          <div key={m.key} className={`${m.card} p-6`}>
+            <h3 className="font-heading font-semibold mb-4" style={{ color: m.color }}>{m.label}</h3>
+            <ResponsiveContainer width="100%" height={220}>
+              <AreaChart data={timeSeries}>
+                <defs>
+                  <linearGradient id={m.gradId} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={m.color} stopOpacity={0.4} />
+                    <stop offset="100%" stopColor={m.color} stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <XAxis dataKey="label" tick={{ fill: "#94A3B8", fontSize: 10 }} axisLine={false} tickLine={false} interval="preserveStartEnd" />
+                <YAxis tick={{ fill: "#94A3B8", fontSize: 11 }} axisLine={false} tickLine={false} allowDecimals={false} width={28} />
+                <Tooltip {...tooltipStyle} />
+                <Area type="monotone" dataKey={m.key} name={m.label} stroke={m.color} strokeWidth={2} fill={`url(#${m.gradId})`} animationDuration={800} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
